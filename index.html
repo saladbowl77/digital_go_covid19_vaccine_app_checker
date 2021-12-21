@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ワクチン接種アプリ接種証明書の発行チェックサイト</title>
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        main input[type="text"]{
+            width: calc(80% - 20px - 2px);
+            border-radius: 20px;
+            font-size: 16px;
+            padding: 5px 10px;
+            border: 1px solid #121212;
+        }
+        main button {
+            width: calc(20% - 10px);
+            border-radius: 20px;
+            font-size: 16px;
+            padding: 5px;
+            background-color: #efefef;
+        }
+
+        main p {margin: 5px 0;}
+
+        main div#result {
+            margin: 10px;
+            width: calc(100% - 20px);
+        }
+        main div#result h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        main div#result p {
+            font-size: 1rem;
+            line-height: 1.5rem;
+        }
+        main div#result p#updateDay{
+            font-size: .9rem;
+            line-height: .9rem;
+            margin: 1px 0 5px 0;
+            color: #525252;
+        }
+        main div#result h2 {margin-top: 10px;}
+        main div#result a {
+            color: #121212;
+            display: block;
+            font-size: 1rem;
+            line-height: 1.5rem;
+        }
+        main div#result p a {color: #121212; display: inline-block;}
+        main div#result a#downloadLinkGoogle,
+        main div#result a#downloadLinkApple {
+            width: 200px;
+            display: inline-block;
+            padding: 10px;
+            border-radius: 10px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        main div#result a#downloadLinkApple{
+            background: rgb(68,210,252);
+            background: linear-gradient(180deg, rgba(68,210,252,1) 0%, rgba(31,113,241,1) 100%);
+        
+        }
+        main div#result a#downloadLinkGoogle{
+            position: relative;
+            background-color: #689f38;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ワクチン接種アプリ接種証明書の発行チェックサイト</h1>
+    </header>
+    <main>
+        <p>デジタル庁が公開していデータを利用しています。<a href="https://www.digital.go.jp/policies/vaccinecert/faq_04#q02" target="_blank" rel="noopener noreferrer">リンク</a></p>
+        <p>本サイトは<a href="https://github.com/saladbowl77/digital_go_covid19_vaccine_app_checker" target="_blank" rel="noopener noreferrer">GitHub</a>にてソースコードを公開しております。</p>
+        <p>入力欄には県名と市区町村名をつなげて入力してください。</p>
+        <input
+            type="text"
+            name="inputCityName"
+            id="inputCityName"
+            placeholder="例) 東京都千代田区"
+        >
+        <button onclick="searchCity()">検索</button>
+        <div id="result"></div>
+    </main>
+    <footer>
+        <div>
+            <p>規約等</p>
+            <a href="/">さらだぼぉるWebソフト利用規約</a>
+            <a href="/ga">Google Analytics について</a>
+        </div>
+        <div>
+            <p>運営者リンク</p>
+            <a href="http://saladbowl.work" target="_blank" rel="noopener noreferrer">ポートフォリオ</a>
+            <a href="http://blog.saladbowl.work" target="_blank" rel="noopener noreferrer">ブログ</a>
+            <a href="http://twitter.com/saladbowl_dev" target="_blank" rel="noopener noreferrer">ツイッター</a>
+        </div>
+        <p>©Copyright 2021 さらだぼぉる All rights reserved.</p>
+    </footer>
+    <script>
+        let cityVacData = [];
+        const request = new XMLHttpRequest();
+        request.addEventListener('load', (event) => {
+            const response = event.target.responseText;
+            const dataString = response.split('\n');
+            for (let i = 0; i < dataString.length; i++) cityVacData[i] = dataString[i].split(',');
+        });
+        request.open('GET', "./vaccinecert_list.csv", true);
+        request.overrideMimeType('text/plain; charset=Shift_JIS');
+        request.send();
+
+        function searchCity() {
+            cityName = document.getElementById("inputCityName").value;
+            if(cityName == ""){
+                document.getElementById("result").innerHTML = `<h2>市区町村を入力してください</h2>`;
+            } else {
+                for (i=0;i<cityVacData.length;i++){
+                    if (cityVacData[i][1] == `"${cityName}"`){
+                        const update = cityVacData[i][3].replace(/"/g, '')
+                        const updateArr = [
+                            update.substring(0,4),
+                            update.substring(4,6),
+                            update.substring(6,8)
+                        ]
+                        document.getElementById("result").innerHTML = `<h2>${cityName}の対応情報</h2>
+<p>${cityVacData[i][2].replace(/"/g, '')}</p>
+<p id="updateDay">更新日 : ${updateArr[0]}/${updateArr[1]}/${updateArr[2]}</p>
+<h2>デジタル庁よくある質問</h2>
+<a href="https://www.digital.go.jp/policies/posts/vaccinecert_faq" target="_blank" rel="noopener noreferrer">デジタル庁よくある質問一覧</a>
+<a href="https://www.digital.go.jp/policies/vaccinecert/faq_04" target="_blank" rel="noopener noreferrer">本サイト関連 : どの市区町村を選んで発行すればよいですか</a>
+<h2>ダウンロードリンク</h2>
+<a
+    href="https://apps.apple.com/jp/app/id1593815264"
+    target="_blank"
+    rel="noopener noreferrer"
+    id="downloadLinkApple"
+>App Store</a>
+<a
+    href="https://play.google.com/store/apps/details?id=jp.go.digital.vrs.vpa"
+    target="_blank"
+    rel="noopener noreferrer"
+    id="downloadLinkGoogle"
+>Google Play</a>
+`;
+    
+                        return;
+                    }
+                    if(i == cityVacData.length - 1){
+                        document.getElementById("result").innerHTML = `<h2>検索結果がありません。入力内容を今一度お確かめください。</h2> `
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163146016-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-163146016-1');
+    </script>
+</body>
+</html>
