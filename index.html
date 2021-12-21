@@ -13,6 +13,7 @@
             font-size: 16px;
             padding: 5px 10px;
             border: 1px solid #121212;
+            margin: 10px 0;
         }
         main button {
             width: calc(20% - 10px);
@@ -20,9 +21,14 @@
             font-size: 16px;
             padding: 5px;
             background-color: #efefef;
+            margin: 10px 0;
         }
 
-        main p {margin: 5px 0;}
+        main p {
+            font-size: 1rem;
+            line-height: 1.1rem;
+            margin: 5px 0;
+        }
 
         main div#result {
             margin: 10px;
@@ -48,6 +54,7 @@
             display: block;
             font-size: 1rem;
             line-height: 1.5rem;
+            width: auto;
         }
         main div#result p a {color: #121212; display: inline-block;}
         main div#result a#downloadLinkGoogle,
@@ -58,6 +65,7 @@
             border-radius: 10px;
             color: #ffffff;
             text-decoration: none;
+            margin: 5px 0;
         }
         main div#result a#downloadLinkApple{
             background: rgb(68,210,252);
@@ -68,6 +76,11 @@
             position: relative;
             background-color: #689f38;
         }
+        main p.miniTxt {
+            font-size: .9rem;
+            line-height: 1rem;
+            color: #525252;
+        }
     </style>
 </head>
 <body>
@@ -75,8 +88,6 @@
         <h1>ワクチン接種アプリ接種証明書の発行チェックサイト</h1>
     </header>
     <main>
-        <p>デジタル庁が公開していデータを利用しています。<a href="https://www.digital.go.jp/policies/vaccinecert/faq_04#q02" target="_blank" rel="noopener noreferrer">リンク</a></p>
-        <p>本サイトは<a href="https://github.com/saladbowl77/digital_go_covid19_vaccine_app_checker" target="_blank" rel="noopener noreferrer">GitHub</a>にてソースコードを公開しております。</p>
         <p>入力欄には県名と市区町村名をつなげて入力してください。</p>
         <input
             type="text"
@@ -86,6 +97,9 @@
         >
         <button onclick="searchCity()">検索</button>
         <div id="result"></div>
+
+        <p class="miniTxt">デジタル庁が公開していデータを利用しています。<a href="https://www.digital.go.jp/policies/vaccinecert/faq_04#q02" target="_blank" rel="noopener noreferrer">リンク</a></p>
+        <p class="miniTxt">本サイトは<a href="https://github.com/saladbowl77/digital_go_covid19_vaccine_app_checker" target="_blank" rel="noopener noreferrer">GitHub</a>にてソースコードを公開しております。</p>
     </main>
     <footer>
         <div>
