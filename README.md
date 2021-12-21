@@ -1,0 +1,1 @@
+# digital_go_covid19_vaccine_app_checker
